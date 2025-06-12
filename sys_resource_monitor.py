@@ -1,25 +1,26 @@
-import tkinter as tk
-from tkinter import ttk
 import psutil
+import time
+import os
 
-root = tk.Tk()
-root.title("System Resource Monitor")
-root.geometry("300x150")
+def clear_screen():
+    # Clear command for Windows or macOS/Linux
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-cpu_label = ttk.Label(root, text="CPU Usage: ", font=("Helvetica", 12) )
-cpu_label.pack(pady=10)
+def monitor():
+    try:
+        while True:
+            clear_screen()
 
-memory_label = ttk.Label(root, text="Memory Usage: ", font=("Helvetica", 12))
-memory_label.pack(pady=10)
+            cpu_percent = psutil.cpu_percent(interval=1)
+            memory_percent = psutil.virtual_memory().percent
 
-def update_info():
-    cpu_percent = psutil.cpu_percent()
-    memory_percent = psutil.virtual_memory().percent
+            print("System Resource Monitor\n")
+            print(f"CPU Usage:    {cpu_percent}%")
+            print(f"Memory Usage: {memory_percent}%")
+            print("-" * 30)
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("\nMonitor stopped.")
 
-    cpu_label.config(text=f"CPU Usage: {cpu_percent}%")
-    memory_label.config(text=f"Memory Usage: {memory_percent}%")
-
-    root.after(1000, update_info)
-
-update_info()
-root.mainloop()
+if __name__ == "__main__":
+    monitor()
